@@ -1,6 +1,6 @@
 # Usage example
 
-```edn
+```clojure
 (css/->style
  {:h3    {:font-family    :inherit
           :font-size      :2.5vh
@@ -18,6 +18,21 @@
           :margin          :0.5vh
           :justify-content :space-between}})
 ```
+
+## Install
+
+```edn
+{:deps {veschin/css-to-edn {:git/url "https://github.com/veschin/edn-to-css.git"
+                            :sha     "69b87d54bf60077bbacc6c9720968baf7c021a91"}}}
+```
+
+## Require
+
+```clojure
+(ns _
+ (:require css))
+```
+
 
 ## Possible usage
 
