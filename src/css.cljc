@@ -67,3 +67,10 @@
 
 (defmacro style-tag [edn-style]
   `[:style (->style ~edn-style)])
+
+(defn style-fn
+  "let not supported"
+  [edn-style]
+  (->> edn-style
+       (map tag<->props)
+       (string/join "\n")))
