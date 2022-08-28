@@ -19,6 +19,27 @@
           :justify-content :space-between}})
 ```
 
+```clojure
+;; macro for use in repl 
+css/->style 
+
+;; fn for use in production code 
+css/style-fn
+```
+
+``` clojure
+(css/style-fn 
+ {:#main {:color :red}
+  :css/media 
+  [{:expression {:min-width 500}
+;;  :cond? :not | :and | :only
+;;  :type  :screen | :print ... etc
+    :nested {:#main {:color :green}}
+   }
+   ...]})
+```
+
+
 ## Install
 
 ```edn

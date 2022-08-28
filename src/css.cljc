@@ -43,16 +43,51 @@
 (defn prop<->value [[prop value]]
   (important? (type-cast prop) (type-cast value)))
 
+(defn ->expression [expr]
+    (-> expr
+        vec
+        first
+        ((fn [[key val]]
+           (str "(" (name key) ": " (type-cast val) ")")))))
+
+(declare style-fn)
+
+(defn ->media [{:keys [type cond? expression nested]}]
+  (let [opts (string/join
+              " "
+              (cond-> []
+                cond?
+                (conj (name cond?))
+
+                type
+                (conj (if (vector? type)
+                        (string/join ", " (map name type))
+                        type))
+
+                type
+                (conj " and ")
+
+                :default
+                (conj (->expression expression))
+                ))]
+    (str "@media "  opts  "\n{" (style-fn nested) "}\n")))
+
 (defn tag<->props [[tag props] & [nested-tag?]]
   (let [nested (:nested props)
         ->val (fn [fn- val] (string/join "\n " (map fn- val)))
         nested-tag? (when nested-tag? (str (type-cast nested-tag?) " "))
         ->tag (fn [val] (str nested-tag? (type-cast tag) " {" val "}"))]
-    (if nested
+    (cond
+      (= tag :css/media)
+      (string/join "\n" (map ->media props))
+
+      nested
       (string/join
        "\n"
        [(->tag (->val prop<->value (dissoc props :nested)))
         (->val #(tag<->props % tag) nested)])
+
+      :default
       (->tag (->val prop<->value props)))))
 
 (defmacro sub-let [let- & body]
